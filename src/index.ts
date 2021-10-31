@@ -4,6 +4,7 @@ import logger from 'morgan';
 import helmet from 'helmet';
 import { config } from 'dotenv';
 import configSettings from './config/config';
+import db from './config/dbConfig';
 
 config();
 
@@ -22,6 +23,8 @@ app.use(
 		':date[iso] :remote-addr :method :url :status :res[content-length] - :response-time ms'
 	)
 );
+
+db(configSettings.MONGO_URI);
 
 /*
  * @routes
