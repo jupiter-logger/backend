@@ -1,0 +1,28 @@
+{
+	"extends": [
+			"airbnb-base", "prettier", "plugin:node/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+			"ecmaVersion": "latest",
+			"sourceType": "module"
+	},
+	"plugins": [
+			"@typescript-eslint", "prettier"
+	],
+	"rules": {
+		"prettier/prettier":"error",
+		"no-unused-vars":"warn",
+		"no-console":"warn",
+		"func-names":"off",
+		"prefer-rest-params":"off",
+		"radix":"off",
+		"node/no-unsupported-features/es-syntax": [
+			"error",
+			{
+				"version": ">=13.0.0",
+				"ignores": ["modules"]
+			}
+		]
+	}
+}
