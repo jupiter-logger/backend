@@ -12,5 +12,9 @@ const loginUser = async (req: Request, res: Response) => {
 		.json({ message: loginUserResponse });
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { loginUser };
+const getUser = async (req: Request, res: Response) => {
+	const { user } = res.locals;
+	return res.status(user.status).json({ message: user });
+};
+
+export { loginUser, getUser };
