@@ -4,5 +4,5 @@ export interface IResponse {
 	functionName: string | null;
 	serverMessage: string;
 	message: string | null;
-	data: object | null;
+	data: { type: string; payload: unknown };
 }

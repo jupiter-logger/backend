@@ -1,12 +1,5 @@
 import { IResponse } from '../types/IResponse';
-
-interface ResponseParams {
-	statusCode: string;
-	functionName: string | null;
-	message: string | null;
-	data: object | null;
-	uniqueCode: string;
-}
+import { IResponseParams } from '../types/IResponseParams';
 
 const generateResponse = (statusCode: string) => {
 	switch (statusCode) {
@@ -61,7 +54,7 @@ const generateResponse = (statusCode: string) => {
 	}
 };
 
-const responseHandler = (responseParamObj: ResponseParams): IResponse => {
+const responseHandler = (responseParamObj: IResponseParams): IResponse => {
 	const obj1 = {
 		uniqueCode: responseParamObj.uniqueCode,
 		functionName: responseParamObj.functionName,
