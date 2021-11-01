@@ -8,7 +8,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 	if (!email || !email.trim()) {
 		const responseObj: IResponseParams = {
 			statusCode: 'UNPROCESSABLE',
-			data: { type: 'error' },
+			data: { type: 'error', payload: null },
 			functionName: 'validateEmail',
 			message: 'Email is not present',
 			uniqueCode: 'email_not_present',
@@ -22,7 +22,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 	if (!emailRegex.test(email)) {
 		const responseObj: IResponseParams = {
 			statusCode: 'UNPROCESSABLE',
-			data: { type: 'error' },
+			data: { type: 'error', payload: null },
 			functionName: 'validateEmail',
 			message: 'Email is invalid',
 			uniqueCode: 'invalid_email',
@@ -33,7 +33,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 
 	const responseObj: IResponseParams = {
 		statusCode: 'SUCCESS',
-		data: { type: 'success' },
+		data: { type: 'success', payload: null },
 		functionName: 'validateEmail',
 		message: 'Email is valid',
 		uniqueCode: 'valid_email',
@@ -48,7 +48,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 	if (!fullName || !fullName.trim()) {
 		const responseObj: IResponseParams = {
 			statusCode: 'UNPROCESSABLE',
-			data: { type: 'error' },
+			data: { type: 'error', payload: null },
 			functionName: 'validateFullName',
 			message: 'Fullname is not present',
 			uniqueCode: 'fullname_not_present',
@@ -62,7 +62,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 	if (!fullNameRegex.test(fullName)) {
 		const responseObj: IResponseParams = {
 			statusCode: 'UNPROCESSABLE',
-			data: { type: 'error' },
+			data: { type: 'error', payload: null },
 			functionName: 'validateFullName',
 			message: 'Fullname is invalid',
 			uniqueCode: 'invalid_fullname',
@@ -73,7 +73,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 
 	const responseObj: IResponseParams = {
 		statusCode: 'SUCCESS',
-		data: { type: 'success' },
+		data: { type: 'success', payload: null },
 		functionName: 'validateFullName',
 		message: 'Fullname is valid',
 		uniqueCode: 'valid_fullname',

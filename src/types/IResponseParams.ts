@@ -2,6 +2,6 @@ export interface IResponseParams {
 	statusCode: string;
 	functionName: string | null;
 	message: string | null;
-	data: object | null;
+	data: { type: string; payload: unknown };
 	uniqueCode: string;
 }

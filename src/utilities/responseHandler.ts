@@ -49,7 +49,7 @@ const generateResponse = (statusCode: string) => {
 				uniqueCode: 'no_code',
 				serverMessage: 'Response doesnot exist for this code',
 				message: null,
-				data: null,
+				data: { type: 'error', payload: null },
 			};
 	}
 };

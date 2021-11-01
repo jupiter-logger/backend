@@ -18,7 +18,7 @@ const checkIfUserExists = async (contextObject: {
 		if (!user) {
 			const responseObj: IResponseParams = {
 				statusCode: 'NOT_FOUND',
-				data: { type: 'message' },
+				data: { type: 'message', payload: null },
 				functionName: 'checkIfUserExists',
 				message: 'User is not present',
 				uniqueCode: 'user_not_present',
@@ -71,7 +71,7 @@ const createUser = async (contextObject: {
 		if (!user) {
 			const responseObj: IResponseParams = {
 				statusCode: 'INTERNAL_SERVER_ERROR',
-				data: { type: 'error' },
+				data: { type: 'error', payload: null },
 				functionName: 'createUser',
 				message: 'user not created due to some mongo error',
 				uniqueCode: 'createUser_internal_server_error_0',
