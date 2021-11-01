@@ -26,9 +26,11 @@ const checkIfUserExists = async (contextObject: {
 			const messageObject: IResponse = responseHandler(responseObj);
 			return messageObject;
 		}
+
+		const signJwtResponse: string = signJwt({ email, _id: user._id });
 		const responseObj: IResponseParams = {
 			statusCode: 'SUCCESS',
-			data: { type: 'message', payload: user },
+			data: { type: 'message', payload: { ...user, token: signJwtResponse } },
 			functionName: 'checkIfUserExists',
 			message: 'User already exists',
 			uniqueCode: 'user_present',
