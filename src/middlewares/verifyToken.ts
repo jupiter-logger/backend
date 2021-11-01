@@ -2,9 +2,21 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { checkIfUserExists } from '../components/user/user.dal';
 import config from '../config/config';
+import responseCodes from '../constants/responseCodes';
 import { IResponse } from '../types/IResponse';
 import { IResponseParams } from '../types/IResponseParams';
 import responseHandler from '../utilities/responseHandler';
+
+const unauthorizedMessage = (count: number): IResponseParams => {
+	const errorResponse: IResponseParams = {
+		statusCode: responseCodes.unauthorized,
+		functionName: 'verifyToken',
+		message: 'Unauthorized',
+		data: { type: 'error', payload: null },
+		uniqueCode: `verifyToken_err_not_authorized_${count}`,
+	};
+	return errorResponse;
+};
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 	const { JWT_SECRET }: { JWT_SECRET: string } = config;
@@ -16,13 +28,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 		!authorization.startsWith('Bearer ') ||
 		!authorization.trim()
 	) {
-		const errorResponse: IResponseParams = {
-			statusCode: 'UNAUTHORIZED',
-			functionName: 'verifyToken',
-			message: 'Unauthorized',
-			data: { type: 'error', payload: null },
-			uniqueCode: 'verifyToken_err_not_authorized_0',
-		};
+		const errorResponse: IResponseParams = unauthorizedMessage(0);
 		const response: IResponse = responseHandler(errorResponse);
 		return res.status(response.status).json({ message: response });
 	}
@@ -31,25 +37,13 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 
 	jwt.verify(token, JWT_SECRET, async (err, decoded) => {
 		if (err) {
-			const errorResponse: IResponseParams = {
-				statusCode: 'UNAUTHORIZED',
-				functionName: 'verifyToken',
-				message: 'Unauthorized',
-				data: { type: 'error', payload: null },
-				uniqueCode: 'verifyToken_err_not_authorized_1',
-			};
+			const errorResponse: IResponseParams = unauthorizedMessage(1);
 			const response: IResponse = responseHandler(errorResponse);
 			return res.status(response.status).json({ message: response });
 		}
 
 		if (!decoded) {
-			const errorResponse: IResponseParams = {
-				statusCode: 'UNAUTHORIZED',
-				functionName: 'verifyToken',
-				message: 'Unauthorized',
-				data: { type: 'error', payload: null },
-				uniqueCode: 'verifyToken_err_not_authorized_2',
-			};
+			const errorResponse: IResponseParams = unauthorizedMessage(2);
 			const response: IResponse = responseHandler(errorResponse);
 			return res.status(response.status).json({ message: response });
 		}
@@ -61,28 +55,16 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 		});
 
 		if (loggedInUser.data.type !== 'success') {
-			const errorResponse: IResponseParams = {
-				statusCode: 'UNAUTHORIZED',
-				functionName: 'verifyToken',
-				message: 'Unauthorized',
-				data: { type: 'error', payload: null },
-				uniqueCode: 'verifyToken_err_not_authorized_3',
-			};
+			const errorResponse: IResponseParams = unauthorizedMessage(3);
 			const response: IResponse = responseHandler(errorResponse);
 			return res.status(response.status).json({ message: response });
 		}
 
-		res.locals.user = loggedInUser.data.payload;
+		res.locals.user = loggedInUser;
 		return next();
 	});
 
-	const errorResponse: IResponseParams = {
-		statusCode: 'UNAUTHORIZED',
-		functionName: 'verifyToken',
-		message: 'Unauthorized',
-		data: { type: 'error', payload: null },
-		uniqueCode: 'verifyToken_err_not_authorized_4',
-	};
+	const errorResponse: IResponseParams = unauthorizedMessage(4);
 	const response: IResponse = responseHandler(errorResponse);
 	return res.status(response.status).json({ message: response });
 };

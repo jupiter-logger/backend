@@ -1,3 +1,4 @@
+import responseCodes from '../constants/responseCodes';
 import { IResponse } from '../types/IResponse';
 import { IResponseParams } from '../types/IResponseParams';
 import responseHandler from '../utilities/responseHandler';
@@ -7,7 +8,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 
 	if (!email || !email.trim()) {
 		const responseObj: IResponseParams = {
-			statusCode: 'UNPROCESSABLE',
+			statusCode: responseCodes.unprocessable,
 			data: { type: 'error', payload: null },
 			functionName: 'validateEmail',
 			message: 'Email is not present',
@@ -21,7 +22,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 
 	if (!emailRegex.test(email)) {
 		const responseObj: IResponseParams = {
-			statusCode: 'UNPROCESSABLE',
+			statusCode: responseCodes.unprocessable,
 			data: { type: 'error', payload: null },
 			functionName: 'validateEmail',
 			message: 'Email is invalid',
@@ -32,7 +33,7 @@ const validateEmail = (contextObject: { email: string }): IResponse => {
 	}
 
 	const responseObj: IResponseParams = {
-		statusCode: 'SUCCESS',
+		statusCode: responseCodes.success,
 		data: { type: 'success', payload: null },
 		functionName: 'validateEmail',
 		message: 'Email is valid',
@@ -47,7 +48,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 
 	if (!fullName || !fullName.trim()) {
 		const responseObj: IResponseParams = {
-			statusCode: 'UNPROCESSABLE',
+			statusCode: responseCodes.unprocessable,
 			data: { type: 'error', payload: null },
 			functionName: 'validateFullName',
 			message: 'Fullname is not present',
@@ -61,7 +62,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 
 	if (!fullNameRegex.test(fullName)) {
 		const responseObj: IResponseParams = {
-			statusCode: 'UNPROCESSABLE',
+			statusCode: responseCodes.unprocessable,
 			data: { type: 'error', payload: null },
 			functionName: 'validateFullName',
 			message: 'Fullname is invalid',
@@ -72,7 +73,7 @@ const validateFullName = (contextObject: { fullName: string }): IResponse => {
 	}
 
 	const responseObj: IResponseParams = {
-		statusCode: 'SUCCESS',
+		statusCode: responseCodes.success,
 		data: { type: 'success', payload: null },
 		functionName: 'validateFullName',
 		message: 'Fullname is valid',

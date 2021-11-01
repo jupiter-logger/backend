@@ -4,6 +4,7 @@ import { IResponse } from '../../types/IResponse';
 import { IResponseParams } from '../../types/IResponseParams';
 import { validateEmail, validateFullName } from '../../helpers/validation';
 import signJwt from '../../utilities/signJwt';
+import responseCodes from '../../constants/responseCodes';
 
 const checkIfUserExists = async (contextObject: {
 	email: string;
@@ -17,8 +18,8 @@ const checkIfUserExists = async (contextObject: {
 		const user = await User.findOne({ email });
 		if (!user) {
 			const responseObj: IResponseParams = {
-				statusCode: 'NOT_FOUND',
-				data: { type: 'message', payload: null },
+				statusCode: responseCodes.notFound,
+				data: { type: 'error', payload: null },
 				functionName: 'checkIfUserExists',
 				message: 'User is not present',
 				uniqueCode: 'user_not_present',
@@ -29,8 +30,8 @@ const checkIfUserExists = async (contextObject: {
 
 		const signJwtResponse: string = signJwt({ email, _id: user._id });
 		const responseObj: IResponseParams = {
-			statusCode: 'SUCCESS',
-			data: { type: 'message', payload: { ...user, token: signJwtResponse } },
+			statusCode: responseCodes.success,
+			data: { type: 'success', payload: { ...user, token: signJwtResponse } },
 			functionName: 'checkIfUserExists',
 			message: 'User already exists',
 			uniqueCode: 'user_present',
@@ -39,7 +40,7 @@ const checkIfUserExists = async (contextObject: {
 		return messageObject;
 	} catch (err: unknown) {
 		const responseObj: IResponseParams = {
-			statusCode: 'INTERNAL_SERVER_ERROR',
+			statusCode: responseCodes.internalServerError,
 			data: { type: 'error', payload: err },
 			functionName: 'checkIfUserExists',
 			message: null,
@@ -70,7 +71,7 @@ const createUser = async (contextObject: {
 		const user = await User.create({ email, fullName });
 		if (!user) {
 			const responseObj: IResponseParams = {
-				statusCode: 'INTERNAL_SERVER_ERROR',
+				statusCode: responseCodes.internalServerError,
 				data: { type: 'error', payload: null },
 				functionName: 'createUser',
 				message: 'user not created due to some mongo error',
@@ -83,7 +84,7 @@ const createUser = async (contextObject: {
 		const signJwtResponse: string = signJwt({ email, _id: user._id });
 
 		const responseObj: IResponseParams = {
-			statusCode: 'CREATED',
+			statusCode: responseCodes.created,
 			data: { type: 'success', payload: { ...user, token: signJwtResponse } },
 			functionName: 'createUser',
 			message: 'User created successfully',
@@ -93,7 +94,7 @@ const createUser = async (contextObject: {
 		return messageObject;
 	} catch (err: unknown) {
 		const responseObj: IResponseParams = {
-			statusCode: 'INTERNAL_SERVER_ERROR',
+			statusCode: responseCodes.internalServerError,
 			data: { type: 'error', payload: err },
 			functionName: 'createUser',
 			message: null,
