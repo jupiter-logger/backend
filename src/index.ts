@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { config } from 'dotenv';
 import configSettings from './config/config';
 import db from './config/dbConfig';
+import userRoutes from './components/user/user.routes';
 
 config();
 
@@ -33,6 +34,8 @@ db(configSettings.MONGO_URI);
 app.get('/', (req: Request, res: Response) =>
 	res.json('Hello there you user!!')
 );
+
+app.use('/api/v1/user', userRoutes);
 
 /*
  * @additionalConfig
