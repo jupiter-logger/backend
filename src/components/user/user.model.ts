@@ -11,12 +11,10 @@ const UserSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
-		apps: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'App',
-			},
-		],
+		isDeleted: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,
