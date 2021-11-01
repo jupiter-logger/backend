@@ -3,6 +3,7 @@ import responseHandler from '../../utilities/responseHandler';
 import { IResponse } from '../../types/IResponse';
 import { IResponseParams } from '../../types/IResponseParams';
 import { validateEmail, validateFullName } from '../../helpers/validation';
+import signJwt from '../../utilities/signJwt';
 
 const checkIfUserExists = async (contextObject: {
 	email: string;
@@ -76,9 +77,12 @@ const createUser = async (contextObject: {
 			const errorObject: IResponse = responseHandler(responseObj);
 			return errorObject;
 		}
+
+		const signJwtResponse: string = signJwt({ email, _id: user._id });
+
 		const responseObj: IResponseParams = {
 			statusCode: 'CREATED',
-			data: { type: 'success', payload: user },
+			data: { type: 'success', payload: { ...user, token: signJwtResponse } },
 			functionName: 'createUser',
 			message: 'User created successfully',
 			uniqueCode: 'user_created',

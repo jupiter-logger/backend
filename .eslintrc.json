@@ -25,6 +25,7 @@
 			}
 		],
 		"import/extensions":"off",
-		"node/no-missing-import":"off"
+		"node/no-missing-import":"off",
+		"no-underscore-dangle":"off"
 	}
 }
