@@ -6,6 +6,7 @@ import { config } from 'dotenv';
 import configSettings from './config/config';
 import db from './config/dbConfig';
 import userRoutes from './components/user/user.routes';
+import checkOrigin from './middlewares/checkRequestOrigin';
 
 config();
 
@@ -35,7 +36,7 @@ app.get('/', (req: Request, res: Response) =>
 	res.json('Hello there you user!!')
 );
 
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/user', [checkOrigin], userRoutes);
 
 /*
  * @additionalConfig
