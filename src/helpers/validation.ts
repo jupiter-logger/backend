@@ -177,10 +177,38 @@ const validateUserId = (contextObject: { userId: string }): IResponse => {
 	return messageObject;
 };
 
+const validateAppId = (contextObject: { appId: string }): IResponse => {
+	const { appId } = contextObject;
+
+	if (!appId || !appId.trim()) {
+		const responseObj: IResponseParams = {
+			statusCode: responseCodes.unauthorized,
+			data: { type: 'error', payload: null },
+			functionName: 'validateAppId',
+			message: 'App ID is not present',
+			uniqueCode: uniqueCode.noAppIdPresent,
+		};
+		const messageObject: IResponse = responseHandler(responseObj);
+		return messageObject;
+	}
+
+	const responseObj: IResponseParams = {
+		statusCode: responseCodes.success,
+		data: { type: 'success', payload: null },
+		functionName: 'validateUserId',
+		message: 'Data is valid',
+		uniqueCode: uniqueCode.validAppId,
+	};
+
+	const messageObject: IResponse = responseHandler(responseObj);
+	return messageObject;
+};
+
 export {
 	validateEmail,
 	validateFullName,
 	validateUserId,
 	validateAppName,
 	validateAppDescription,
+	validateAppId,
 };
