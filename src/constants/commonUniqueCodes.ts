@@ -19,6 +19,13 @@ const uniqueCode = {
 	userExists: 'user_exists',
 	userCreated: 'user_created',
 	userFetched: 'user_fetched',
+	appCreated: 'app_created',
+	noAppsRegistered: 'no_apps_registered',
+	appsFetched: 'apps_fetched',
+	noAppIdPresent: 'no_app_id',
+	validAppId: 'valid_app_id',
+	nonExistingApp: 'app_not_existing',
+	apiKeyUpdated: 'api_key_updated',
 	internalServerError: 'internal_server_error',
 };
 
