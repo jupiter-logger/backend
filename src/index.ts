@@ -5,8 +5,9 @@ import helmet from 'helmet';
 import { config } from 'dotenv';
 import configSettings from './config/config';
 import db from './config/dbConfig';
-import userRoutes from './components/user/user.routes';
 import checkOrigin from './middlewares/checkRequestOrigin';
+import userRoutes from './components/user/user.routes';
+import appRoutes from './components/app/app.routes';
 
 config();
 
@@ -37,6 +38,7 @@ app.get('/', (req: Request, res: Response) =>
 );
 
 app.use('/api/v1/user', [checkOrigin], userRoutes);
+app.use('/api/v1/app', [checkOrigin], appRoutes);
 
 /*
  * @additionalConfig
