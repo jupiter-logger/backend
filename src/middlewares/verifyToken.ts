@@ -61,7 +61,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 			return res.status(response.status).json({ response });
 		}
 
-		res.locals.user = loggedInUser.data.payload;
+		res.locals.loggedUser = loggedInUser.data.payload;
 
 		return next();
 	});
