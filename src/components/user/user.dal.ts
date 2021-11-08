@@ -5,6 +5,7 @@ import { IResponseParams } from '../../types/IResponseParams';
 import { validateEmail, validateFullName } from '../../helpers/validation';
 import signJwt from '../../utilities/signJwt';
 import responseCodes from '../../constants/responseCodes';
+import uniqueCode from '../../constants/commonUniqueCodes';
 
 const checkIfUserExists = async (contextObject: {
 	email: string;
@@ -12,7 +13,8 @@ const checkIfUserExists = async (contextObject: {
 	const { email } = contextObject;
 
 	const emailValidationResult: IResponse = validateEmail({ email });
-	if (emailValidationResult.data.type === 'error') return emailValidationResult;
+	if (emailValidationResult.data.type === 'error')
+		return new Promise((resolve) => resolve(emailValidationResult));
 
 	try {
 		const user = await User.findOne({ email });
@@ -22,7 +24,7 @@ const checkIfUserExists = async (contextObject: {
 				data: { type: 'error', payload: null },
 				functionName: 'checkIfUserExists',
 				message: 'User is not present',
-				uniqueCode: 'user_not_present',
+				uniqueCode: uniqueCode.nonExistingUser,
 			};
 			const messageObject: IResponse = responseHandler(responseObj);
 			return messageObject;
@@ -31,10 +33,10 @@ const checkIfUserExists = async (contextObject: {
 		const signJwtResponse: string = signJwt({ email, _id: user._id });
 		const responseObj: IResponseParams = {
 			statusCode: responseCodes.success,
-			data: { type: 'success', payload: { ...user, token: signJwtResponse } },
+			data: { type: 'success', payload: { user, token: signJwtResponse } },
 			functionName: 'checkIfUserExists',
 			message: 'User already exists',
-			uniqueCode: 'user_present',
+			uniqueCode: uniqueCode.userExists,
 		};
 		const messageObject: IResponse = responseHandler(responseObj);
 		return messageObject;
@@ -44,7 +46,7 @@ const checkIfUserExists = async (contextObject: {
 			data: { type: 'error', payload: err },
 			functionName: 'checkIfUserExists',
 			message: null,
-			uniqueCode: 'checkIfUserExists_internal_server_error',
+			uniqueCode: uniqueCode.internalServerError,
 		};
 		const errorObject: IResponse = responseHandler(responseObj);
 		return errorObject;
@@ -58,24 +60,28 @@ const createUser = async (contextObject: {
 	const { email, fullName } = contextObject;
 
 	const emailValidationResult: IResponse = validateEmail({ email });
-	if (emailValidationResult.data.type === 'error') return emailValidationResult;
+	if (emailValidationResult.data.type === 'error')
+		return new Promise((resolve) => resolve(emailValidationResult));
 
 	const fullNameValidationResult: IResponse = validateFullName({ fullName });
 	if (fullNameValidationResult.data.type === 'error')
-		return fullNameValidationResult;
+		return new Promise((resolve) => resolve(fullNameValidationResult));
 
 	try {
 		const isUserPresent: IResponse = await checkIfUserExists({ email });
-		if (isUserPresent.uniqueCode !== 'user_not_present') return isUserPresent;
+		if (isUserPresent.uniqueCode !== uniqueCode.nonExistingUser)
+			return isUserPresent;
 
-		const user = await User.create({ email, fullName });
+		const saveNewUser = new User({ email, fullName });
+		const user = await saveNewUser.save();
+
 		if (!user) {
 			const responseObj: IResponseParams = {
 				statusCode: responseCodes.internalServerError,
 				data: { type: 'error', payload: null },
 				functionName: 'createUser',
 				message: 'user not created due to some mongo error',
-				uniqueCode: 'createUser_internal_server_error_0',
+				uniqueCode: uniqueCode.internalServerError,
 			};
 			const errorObject: IResponse = responseHandler(responseObj);
 			return errorObject;
@@ -85,10 +91,10 @@ const createUser = async (contextObject: {
 
 		const responseObj: IResponseParams = {
 			statusCode: responseCodes.created,
-			data: { type: 'success', payload: { ...user, token: signJwtResponse } },
+			data: { type: 'success', payload: { user, token: signJwtResponse } },
 			functionName: 'createUser',
 			message: 'User created successfully',
-			uniqueCode: 'user_created',
+			uniqueCode: uniqueCode.userCreated,
 		};
 		const messageObject: IResponse = responseHandler(responseObj);
 		return messageObject;
@@ -98,11 +104,27 @@ const createUser = async (contextObject: {
 			data: { type: 'error', payload: err },
 			functionName: 'createUser',
 			message: null,
-			uniqueCode: 'createUser_internal_server_error_1',
+			uniqueCode: uniqueCode.internalServerError,
 		};
 		const errorObject: IResponse = responseHandler(responseObj);
 		return errorObject;
 	}
 };
 
-export { checkIfUserExists, createUser };
+const getLoggedinUser = async (contextObject: {
+	user: object;
+}): Promise<IResponse> => {
+	const { user } = contextObject;
+
+	const responseObj: IResponseParams = {
+		statusCode: responseCodes.success,
+		data: { type: 'success', payload: user },
+		functionName: 'getLoggedinUser',
+		message: 'User fetched successfully',
+		uniqueCode: uniqueCode.userFetched,
+	};
+	const messageObject: IResponse = responseHandler(responseObj);
+	return new Promise((resolve) => resolve(messageObject));
+};
+
+export { checkIfUserExists, createUser, getLoggedinUser };

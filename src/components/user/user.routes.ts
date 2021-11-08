@@ -4,7 +4,7 @@ import { getUser, loginUser } from './user.controllers';
 
 const router: Router = Router();
 
-router.post('/login', loginUser);
+router.post('/', loginUser);
 router.get('/', verifyToken, getUser);
 
 export default router;
