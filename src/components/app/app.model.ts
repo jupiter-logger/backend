@@ -5,10 +5,12 @@ const AppSchema: Schema = new Schema(
 		name: {
 			type: String,
 			required: true,
+			trim: true,
 		},
 		description: {
 			type: String,
 			required: true,
+			trim: true,
 		},
 		apiKey: {
 			type: String,
